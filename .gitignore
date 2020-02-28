@@ -1,0 +1,5 @@
+/env
+/test/Sample Data/*
+*.zip
+__pycache__
+*/__pycache__
