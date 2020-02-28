@@ -23,14 +23,14 @@ class TestParseTag(unittest.TestCase):
             result,
             {'FileVersion':'1.6','SoftwareVersion':'2.1.1.0005'}
         )
-        self.assertEqual(name,'Header')
+        self.assertEqual(name,'Header'.casefold())
 
     def test_sample_attributes(self):
         name,result = parse_tag(self.sample_attributes_tag)
         self.assertDictEqual(
             result,
             {
-                'ID':'01',
+                'SampleID':'01',
                 'Owner':'mk',
                 'Comments':'50ng',
                 'Date':'20100714',
@@ -38,28 +38,13 @@ class TestParseTag(unittest.TestCase):
                 'SystemAPF':'n6_vDV1',
             }
         )
-        self.assertEqual(name,'Sample_Attributes')
-
+        self.assertEqual(name,'Sample_Attributes'.casefold())
     def test_lane_attributes(self):
-        name,result = parse_tag(self.sample_attributes_tag)
-        self.assertDictEqual(
-            result,
-            {
-                'ID':'01',
-                'Owner':'mk',
-                'Comments':'50ng',
-                'Date':'20100714',
-                'GeneRLF':'NS_H_miR',
-                'SystemAPF':'n6_vDV1',
-            }
-        )
-        self.assertEqual(name,'Sample_Attributes')
-    def test_lane_attributes():
         name,result = parse_tag(self.lane_attributes_tag)
         self.assertDictEqual(
             result,
             {
-                'ID':'1',
+                'LaneID':'1',
                 'FovCount':'600',
                 'FovCounted':'600',
                 'ScannerID':'DA01',
@@ -68,7 +53,7 @@ class TestParseTag(unittest.TestCase):
                 'CartridgeID':'miRNAlinearity',
             }
         )
-        self.assertEqual(name,'Lane_Attributes')
+        self.assertEqual(name,'Lane_Attributes'.casefold())
     def test_code_summary(self):
         name,result = parse_tag(self.code_summary_tag)
         self.assertCountEqual(
@@ -100,10 +85,10 @@ class TestParseTag(unittest.TestCase):
                 },
             ]
         )
-        self.assertEqual(name,'Code_Summary')
+        self.assertEqual(name,'Code_Summary'.casefold())
     def test_comments(self):
         name,result = parse_tag(self.comments_tag)
-        self.assertEqual(name,'Comments')
+        self.assertEqual(name,'Messages'.casefold())
         self.assertEqual(result,'')
 
 if __name__ == "__main__":
