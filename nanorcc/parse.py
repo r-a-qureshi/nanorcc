@@ -21,7 +21,7 @@ def parse_tag(tag,data_tag='Code_Summary',message_tag='Messages'):
         if 'ID' in data:
             data[tag.name.split('_')[0].capitalize() + 'ID'] = data['ID']
             data.pop('ID')
-    return((tag.name,data))
+    return(tag.name,data)
 
 def parse_rcc_file(file):
     """RCC file parsing function; calls parse_tag on each tag in the file"""
@@ -45,6 +45,8 @@ def parse_rcc_file(file):
     return(sample_data,genes)
 
 def get_rcc_data(files):
+    """Read data from RCC files and return pandas dataframes of the data and
+    the genes."""
     if type(files) == list:
         pass
     elif type(files) == str:
