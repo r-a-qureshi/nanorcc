@@ -35,7 +35,7 @@ def parse_rcc_file(file):
         **data['header'],
         **data['sample_attributes'],
         **data['lane_attributes'],
-        **counts,
         **{'messages':data['messages']},
+        **counts,
     )
     return(sample_data,genes)
