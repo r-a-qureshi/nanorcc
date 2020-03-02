@@ -1,11 +1,12 @@
 import unittest
 import bs4
 from bs4 import BeautifulSoup
-from nanorcc.parse import parse_tag
+from nanorcc.parse import parse_tag, parse_rcc_file
 
 
 
 class TestParseTag(unittest.TestCase):
+    """test the parse_tag function using example.RCC"""
     def setUp(self):
         with open('test/example.RCC','r') as f:
             soup = BeautifulSoup(f.read(),'html.parser')
@@ -14,7 +15,6 @@ class TestParseTag(unittest.TestCase):
         self.lane_attributes_tag = soup.contents[4]
         self.code_summary_tag = soup.contents[6]
         self.comments_tag = soup.contents[8]
-
 
     def test_header(self):
         name,result = parse_tag(self.header_tag)
@@ -38,6 +38,7 @@ class TestParseTag(unittest.TestCase):
             }
         )
         self.assertEqual(name,'Sample_Attributes'.casefold())
+
     def test_lane_attributes(self):
         name,result = parse_tag(self.lane_attributes_tag)
         self.assertDictEqual(
@@ -53,6 +54,7 @@ class TestParseTag(unittest.TestCase):
             }
         )
         self.assertEqual(name,'Lane_Attributes'.casefold())
+
     def test_code_summary(self):
         name,result = parse_tag(self.code_summary_tag)
         self.assertCountEqual(
@@ -85,10 +87,26 @@ class TestParseTag(unittest.TestCase):
             ]
         )
         self.assertEqual(name,'Code_Summary'.casefold())
+
     def test_comments(self):
         name,result = parse_tag(self.comments_tag)
         self.assertEqual(name,'Messages'.casefold())
         self.assertEqual(result,'')
+
+class TestParseRCCFile(unittest.TestCase):
+    def setUp(self):
+        self.example = 'example.RCC'
+        self.sample_data,self.genes = parse_rcc_file(self.example)
+    def test_sample_data(self):
+        self.assertIsInstance(self.sample_data,dict)
+        self.assertEqual(self.sample_data['hsa-miR-758|0'],12.0)
+        self.assertEqual(len(self.sample_data),20)
+    def test_genes(self):
+        self.assertIsInstance(self.genes,dict)
+        self.assertEqual(len(self.genes.items()),4)
+        self.assertIn('CodeClass',gene.keys())
+        self.assertIn('Accession',gene.keys())
+        self.assertIn('Name',gene.keys())
 
 if __name__ == "__main__":
     unittest.main()
