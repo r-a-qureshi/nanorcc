@@ -1,8 +1,10 @@
 import unittest
 import bs4
 from bs4 import BeautifulSoup
-from nanorcc.parse import parse_tag, parse_rcc_file
+from glob import glob
+from nanorcc.parse import parse_tag, parse_rcc_file, get_rcc_data
 from collections import OrderedDict
+import pandas as pd
 
 
 
@@ -116,6 +118,21 @@ class TestParseRCCFile(unittest.TestCase):
         self.assertEqual(len(genes),753)
         self.assertEqual(len(data),769)
 
+class TestGetRccData(unittest.TestCase):
+    """test get_rcc_data function"""
+    def setUp(self):
+        self.file_path = r'test\example_data_RCC\*RCC'
+        self.data,self.genes = get_rcc_data(self.file_path)
+    def test_input_type_raise(self):
+        self.assertRaises(TypeError,get_rcc_data,12)
+    def test_warning(self):
+        self.assertWarns(UserWarning,get_rcc_data,self.file_path)
+    def test_is_dataframe(self):
+        self.assertIsInstance(self.data,pd.core.frame.DataFrame)
+        self.assertIsInstance(self.genes,pd.core.frame.DataFrame)
+    def test_output_size(self):
+        self.assertTupleEqual(self.data.shape,(12,769))
+        self.assertTupleEqual(self.genes.shape,(753,3))
 
 if __name__ == "__main__":
     unittest.main()
