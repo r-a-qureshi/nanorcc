@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 from collections import OrderedDict
 import csv
+from glob import glob
+from itertools import chain
+import pandas as pd
+import warnings
 
 def parse_tag(tag,data_tag='Code_Summary',message_tag='Messages'):
     """A function for parsing tags read by BeautifulSoup from RCC files"""
@@ -35,7 +39,38 @@ def parse_rcc_file(file):
         **data['header'],
         **data['sample_attributes'],
         **data['lane_attributes'],
-        **{'messages':data['messages']},
+        **{'Messages':data['messages']},
         **counts,
     )
     return(sample_data,genes)
+
+def get_rcc_data(files):
+    if type(files) == list:
+        pass
+    elif type(files) == str:
+        files = glob(files)
+    else:
+        raise(
+            TypeError(
+                'Files must be a list or a valid string for the glob function.'
+            )
+        )
+    exp,genes = zip(*map(parse_rcc_file,files))
+    exp = pd.DataFrame(list(exp))
+    # Make sure all numeric columns are numeric
+    exp = exp.apply(pd.to_numeric,errors='ignore')
+    # check codesets
+    if exp['GeneRLF'].nunique() > 1:
+        warnings.warn(
+            "Multiple code sets detected. Process files from "\
+                "different NanoString Platforms separately to "\
+                "eliminate the risk of overlapping gene names causing "\
+                "data omission.",
+            UserWarning
+        )
+    # Get unique genes from the genes across all files
+    # Convert dicts to tuples and then to a set to get unique elements
+    genes = set(map(lambda x: tuple(x.items()),chain.from_iterable(genes)))
+    genes = pd.DataFrame([dict(i) for i in genes])
+    genes = genes.sort_values(by=['CodeClass','Name']).reset_index(drop=True)
+    return(exp,genes)
