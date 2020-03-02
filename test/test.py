@@ -104,9 +104,9 @@ class TestParseRCCFile(unittest.TestCase):
     def test_genes(self):
         self.assertIsInstance(self.genes,dict)
         self.assertEqual(len(self.genes.items()),4)
-        self.assertIn('CodeClass',gene.keys())
-        self.assertIn('Accession',gene.keys())
-        self.assertIn('Name',gene.keys())
+        self.assertIn('CodeClass',self.genes.keys())
+        self.assertIn('Accession',self.genes.keys())
+        self.assertIn('Name',self.genes.keys())
 
 if __name__ == "__main__":
     unittest.main()
