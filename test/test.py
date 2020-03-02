@@ -1,7 +1,6 @@
 import unittest
 import bs4
 from bs4 import BeautifulSoup
-from unittest.mock import MagicMock
 from nanorcc.parse import parse_tag
 
 
