@@ -2,6 +2,7 @@ import unittest
 import bs4
 from bs4 import BeautifulSoup
 from nanorcc.parse import parse_tag, parse_rcc_file
+from collections import OrderedDict
 
 
 
@@ -22,6 +23,7 @@ class TestParseTag(unittest.TestCase):
             result,
             {'FileVersion':'1.6','SoftwareVersion':'2.1.1.0005'}
         )
+        #2
         self.assertEqual(name,'Header'.casefold())
 
     def test_sample_attributes(self):
@@ -37,6 +39,7 @@ class TestParseTag(unittest.TestCase):
                 'SystemAPF':'n6_vDV1',
             }
         )
+        #6
         self.assertEqual(name,'Sample_Attributes'.casefold())
 
     def test_lane_attributes(self):
@@ -53,6 +56,7 @@ class TestParseTag(unittest.TestCase):
                 'CartridgeID':'miRNAlinearity',
             }
         )
+        #7
         self.assertEqual(name,'Lane_Attributes'.casefold())
 
     def test_code_summary(self):
@@ -86,27 +90,30 @@ class TestParseTag(unittest.TestCase):
                 },
             ]
         )
+        #4
         self.assertEqual(name,'Code_Summary'.casefold())
 
     def test_comments(self):
         name,result = parse_tag(self.comments_tag)
         self.assertEqual(name,'Messages'.casefold())
         self.assertEqual(result,'')
+        #1
 
 class TestParseRCCFile(unittest.TestCase):
     def setUp(self):
-        self.example = 'example.RCC'
+        self.example = 'test/example.RCC'
         self.sample_data,self.genes = parse_rcc_file(self.example)
     def test_sample_data(self):
-        self.assertIsInstance(self.sample_data,dict)
+        self.assertIsInstance(self.sample_data,OrderedDict)
         self.assertEqual(self.sample_data['hsa-miR-758|0'],12.0)
         self.assertEqual(len(self.sample_data),20)
     def test_genes(self):
-        self.assertIsInstance(self.genes,dict)
-        self.assertEqual(len(self.genes.items()),4)
-        self.assertIn('CodeClass',self.genes.keys())
-        self.assertIn('Accession',self.genes.keys())
-        self.assertIn('Name',self.genes.keys())
+        self.assertIsInstance(self.genes,list)
+        [self.assertIsInstance(i,OrderedDict) for i in self.genes]
+        self.assertEqual(len(self.genes),4)
+        self.assertIn('CodeClass',self.genes[0].keys())
+        self.assertIn('Accession',self.genes[0].keys())
+        self.assertIn('Name',self.genes[0].keys())
 
 if __name__ == "__main__":
     unittest.main()
