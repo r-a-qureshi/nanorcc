@@ -15,7 +15,7 @@ class TestParseTag(unittest.TestCase):
         self.sample_attributes_tag = soup.contents[2]
         self.lane_attributes_tag = soup.contents[4]
         self.code_summary_tag = soup.contents[6]
-        self.comments_tag = soup.contents[8]
+        self.messages_tag = soup.contents[8]
 
     def test_header(self):
         name,result = parse_tag(self.header_tag)
@@ -23,7 +23,6 @@ class TestParseTag(unittest.TestCase):
             result,
             {'FileVersion':'1.6','SoftwareVersion':'2.1.1.0005'}
         )
-        #2
         self.assertEqual(name,'Header'.casefold())
 
     def test_sample_attributes(self):
@@ -39,7 +38,6 @@ class TestParseTag(unittest.TestCase):
                 'SystemAPF':'n6_vDV1',
             }
         )
-        #6
         self.assertEqual(name,'Sample_Attributes'.casefold())
 
     def test_lane_attributes(self):
@@ -56,7 +54,6 @@ class TestParseTag(unittest.TestCase):
                 'CartridgeID':'miRNAlinearity',
             }
         )
-        #7
         self.assertEqual(name,'Lane_Attributes'.casefold())
 
     def test_code_summary(self):
@@ -90,22 +87,22 @@ class TestParseTag(unittest.TestCase):
                 },
             ]
         )
-        #4
         self.assertEqual(name,'Code_Summary'.casefold())
 
-    def test_comments(self):
-        name,result = parse_tag(self.comments_tag)
+    def test_messages(self):
+        name,result = parse_tag(self.messages_tag)
         self.assertEqual(name,'Messages'.casefold())
         self.assertEqual(result,'')
-        #1
 
 class TestParseRCCFile(unittest.TestCase):
+    """test parse_rcc_file function"""
     def setUp(self):
         self.example = 'test/example.RCC'
         self.sample_data,self.genes = parse_rcc_file(self.example)
     def test_sample_data(self):
         self.assertIsInstance(self.sample_data,OrderedDict)
         self.assertEqual(self.sample_data['hsa-miR-758|0'],12.0)
+        self.assertEqual(self.sample_data['NEG_C(0)'],11.0)
         self.assertEqual(len(self.sample_data),20)
     def test_genes(self):
         self.assertIsInstance(self.genes,list)
@@ -114,6 +111,11 @@ class TestParseRCCFile(unittest.TestCase):
         self.assertIn('CodeClass',self.genes[0].keys())
         self.assertIn('Accession',self.genes[0].keys())
         self.assertIn('Name',self.genes[0].keys())
+    def test_full_file(self):
+        data,genes = parse_rcc_file('test/full_file_test.RCC')
+        self.assertEqual(len(genes),753)
+        self.assertEqual(len(data),769)
+
 
 if __name__ == "__main__":
     unittest.main()
