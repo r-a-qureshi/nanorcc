@@ -134,10 +134,10 @@ class Normalize():
         annot_cols = orig_cols - gene_cols
         col_idx = self.raw_data.columns.isin(annot_cols)
         self.norm_data = pd.concat(
-        [
-            self.raw_data[self.raw_data.columns[col_idx]],
-            self.norm_data
-        ],
-        axis=1
+            [
+                self.raw_data[self.raw_data.columns[col_idx]],
+                self.norm_data
+            ],
+            axis=1
         )
         return(self)
