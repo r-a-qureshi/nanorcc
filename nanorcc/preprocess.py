@@ -60,7 +60,7 @@ class Normalize():
     def __init__(self,raw_data):
         self.raw_data = raw_data
         self.norm_data = raw_data.copy()
-    def _check_func(self,func)
+    def _check_func(self,func):
         """Check the function to make sure it is valid"""
         if func == 'mean':
             func = np.mean
@@ -80,7 +80,7 @@ class Normalize():
         else:
             pass
         return(genes)
-    def background_subtract(self,genes,func='mean',drop_genes=True)
+    def background_subtract(self,genes,func='mean',drop_genes=True):
         """Subtract background using negative controls."""
         func = self._check_func(func)
         genes = self._check_genes(genes)

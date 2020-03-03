@@ -21,6 +21,7 @@ normalized_df = (norm
     .scale_by_genes(genes=ccgs.get('Housekeeping'))
 ).norm_data
 # can also scale by taking the 100 least variable genes instead of housekeeping
+norm = Normalize(exp)
 fgs = FunctionGeneSelector(func='std',n=100,select_least=True)
 normalized_df = (norm
     .background_subtract(genes=ccgs.get('Negative'))
