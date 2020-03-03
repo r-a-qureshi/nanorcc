@@ -3,9 +3,13 @@
 This is a Python package for parsing NanoString RCC files into pandas dataframes. 
 This package also provides methods for preprocessing and normalizing NanoString Data.
 ## TODO
--Create Documentation
--Write function or class to adjust data from the same platform across different code sets
--Write function or class to perform quality control checks
+*Create Documentation
+
+*Write function or class to adjust data from the same platform across different code sets
+
+*Write function or class to perform quality control checks
+
+*Write test cases for above code
 ## Tutorial
 ```python
 from nanorcc.parse import get_rcc_data
