@@ -1,6 +1,7 @@
 import unittest
 from bs4 import BeautifulSoup
 from nanorcc.parse import parse_tag, parse_rcc_file, get_rcc_data
+from nanorcc.preprocess import *
 from collections import OrderedDict
 import pandas as pd
 

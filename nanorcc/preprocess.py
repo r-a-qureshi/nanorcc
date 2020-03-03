@@ -49,17 +49,19 @@ class FunctionGeneSelector():
         self.func = _check_func(func)
         self.n = n
         self.select_least = select_least
-    def get(df):
+    def get(self,df):
         if self.select_least:
-            genes = df.apply(self.func).nsmallest(n).index
+            genes = df.apply(self.func).nsmallest(self.n).index
         else:
-            genes = df.apply(self.func).nlargest(n).index
+            genes = df.apply(self.func).nlargest(self.n).index
         return(genes)
 
 class Normalize():
-    def __init__(self,raw_data):
+    def __init__(self,raw_data,genes):
         self.raw_data = raw_data
+        self.genes = genes
         self.norm_data = raw_data.copy()
+        self.norm_data = self.norm_data[genes['Name']]
     def _check_func(self,func):
         """Check the function to make sure it is valid"""
         if func == 'mean':
@@ -88,6 +90,7 @@ class Normalize():
         if drop_genes:
             self.norm_data = self.norm_data.drop(genes,axis=1)
         self.norm_data = self.norm_data.subtract(bg,axis='index')
+        return(self)
     def _scale_factor(self,genes,func='mean'):
         func = self._check_func(func)
         genes = self._check_genes(genes)
@@ -97,11 +100,12 @@ class Normalize():
     def scale_by_genes(self,genes,func='mean',drop_genes=True):
         """Normalize against a set of genes usually positive controls or
         housekeeping genes."""
-        sf = self._scale_factor(self.norm_data)
+        sf = self._scale_factor(genes,func)
         genes = self._check_genes(genes)
         if drop_genes:
             self.norm_data = self.norm_data.drop(genes,axis=1)
         self.norm_data = self.norm_data.multiply(sf,axis='index')
+        return(self)
     def quantile(self):
         """Performs Quantile normalization on a data frame where samples are rows
         and genes are columns."""
@@ -117,3 +121,23 @@ class Normalize():
         )
         qnm.columns = self.norm_data.columns
         self.norm_data = qnm
+        return(self)
+    def drop_genes(self,genes):
+        """Remove genes from the normalized dataframe"""
+        genes = self._check_genes(genes)
+        self.norm_data.drop(genes,axis=1,inplace=True)
+        return(self)
+    def include_annot_cols(self):
+        """Reattach the annotation columns from the raw data."""
+        orig_cols = set(self.raw_data.columns)
+        gene_cols = set(self.genes['Name'])
+        annot_cols = orig_cols - gene_cols
+        col_idx = self.raw_data.columns.isin(annot_cols)
+        self.norm_data = pd.concat(
+        [
+            self.raw_data[self.raw_data.columns[col_idx]],
+            self.norm_data
+        ],
+        axis=1
+        )
+        return(self)

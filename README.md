@@ -28,4 +28,13 @@ normalized_df = (norm
     .scale_by_genes(genes=ccgs.get('Positive'))
     .scale_by_genes(genes=fgs)
 ).norm_data
+# quantile normalization with no other preprocessing
+norm = Normalize(exp)
+normalized_df = (norm
+    .drop_genes(genes=ccgs.get('Positive')+ccgs.get('Negative'))
+    .quantile()
+    .include_annot_cols()
+).norm_data
+# Normalize().include_annot_cols puts the annotation columns from the raw data
+# back into the normalized dataframe
 ```
