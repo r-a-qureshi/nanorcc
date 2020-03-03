@@ -77,3 +77,4 @@ class TestNormalize(unittest.TestCase):
             np.repeat(self.norm.norm_data.iloc[0].std(),shape[0]),
             rtol=.01,
         )
+    #TODO: write tests for FunctionGeneSelector
