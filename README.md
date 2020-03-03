@@ -18,6 +18,6 @@ pos = GeneSelector(genes,code_class='Positive')
 norm = NormalizeUsingControls(cols=pos,func='mean').eval(norm)
 # Identify Housekeeping probes
 hk = GeneSelector(genes,code_class='Housekeeping')
-# NOrmalize against Housekeeping probes
+# Normalize against Housekeeping probes
 norm = NormalizeUsingControls(cols=hk,func='mean').eval(norm)
 ```
