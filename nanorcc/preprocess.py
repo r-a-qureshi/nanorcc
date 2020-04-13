@@ -45,15 +45,16 @@ def _check_func(func):
 class FunctionGeneSelector():
     """Choose genes for normalization based on the data. For example you can 
     use the 100 genes with least standard deviation for normalization."""
-    def __init__(self,func='std',n=100,select_least=True):
+    def __init__(self,genes,func='std',n=100,select_least=True):
+        self.genes = genes
         self.func = _check_func(func)
         self.n = n
         self.select_least = select_least
     def get(self,df):
         if self.select_least:
-            genes = df.apply(self.func).nsmallest(self.n).index
+            genes = df[self.genes['Name']].apply(self.func).nsmallest(self.n).index
         else:
-            genes = df.apply(self.func).nlargest(self.n).index
+            genes = df[self.genes['Name']].apply(self.func).nlargest(self.n).index
         return(genes)
 
 class Normalize():

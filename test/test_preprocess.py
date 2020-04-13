@@ -79,17 +79,21 @@ class TestNormalize(unittest.TestCase):
             rtol=.01,
         )
 
-    class TestFunctionGeneSelector(unittest.TestCase):
-        """Test FunctionGeneSelector"""
-        def setUp(self):
-            counts,genes = get_rcc_data('test/example_data_RCC/*.RCC')
-            self.counts = counts
-            self.genes = genes
-            self.fgs = FunctionGeneSelector(variation,n=10)
-        def test_func_gene_selector(self):
-            genes = self.counts[genes['Name']].apply(variation).nsmallest(10).index.tolist()
-            fgs_genes = self.fgs.get(self.counts).tolist()
-            self.assertListEqual(genes,fgs_genes) 
-            # check that they're not empty
-            self.assertTrue(genes)
-            self.assertTrue(fgs_genes)
+class TestFunctionGeneSelector(unittest.TestCase):
+    """Test FunctionGeneSelector"""
+    def setUp(self):
+        counts,genes = get_rcc_data('test/example_data_RCC/*.RCC')
+        self.counts = counts
+        self.genes = genes
+        self.fgs = FunctionGeneSelector(self.genes,variation,n=10)
+    def test_func_gene_selector(self):
+        genes = self.counts[self.genes['Name']]\
+            .apply(variation).nsmallest(10).index.tolist()
+        fgs_genes = self.fgs.get(self.counts).tolist()
+        self.assertListEqual(genes,fgs_genes) 
+        # check that they're not empty
+        self.assertTrue(genes)
+        self.assertTrue(fgs_genes)
+
+if __name__ == "__main__":
+    unittest.main()
