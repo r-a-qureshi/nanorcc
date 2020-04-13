@@ -3,6 +3,7 @@ from nanorcc.preprocess import *
 import unittest
 import pandas as pd
 import numpy as np
+from scipy.stats import variation
 
 class TestCodeClassGeneSelector(unittest.TestCase):
     """Test CodeClassGeneSelector"""
@@ -77,4 +78,18 @@ class TestNormalize(unittest.TestCase):
             np.repeat(self.norm.norm_data.iloc[0].std(),shape[0]),
             rtol=.01,
         )
-    #TODO: write tests for FunctionGeneSelector
+
+    class TestFunctionGeneSelector(unittest.TestCase):
+        """Test FunctionGeneSelector"""
+        def setUp(self):
+            counts,genes = get_rcc_data('test/example_data_RCC/*.RCC')
+            self.counts = counts
+            self.genes = genes
+            self.fgs = FunctionGeneSelector(variation,n=10)
+        def test_func_gene_selector(self):
+            genes = self.counts[genes['Name']].apply(variation).nsmallest(10).index.tolist()
+            fgs_genes = self.fgs.get(self.counts).tolist()
+            self.assertListEqual(genes,fgs_genes) 
+            # check that they're not empty
+            self.assertTrue(genes)
+            self.assertTrue(fgs_genes)

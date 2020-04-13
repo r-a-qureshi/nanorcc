@@ -1,1 +1,1 @@
-from test import test, test_preprocess
+from test import test, test_preprocess, test_quality_control
