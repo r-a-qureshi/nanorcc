@@ -1,4 +1,3 @@
-#TODO write tests
 from scipy.stats import pearsonr
 
 class QualityControl():
