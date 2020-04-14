@@ -5,7 +5,6 @@ This package also provides methods for preprocessing and normalizing NanoString 
 ## TODO
 * Create Documentation
 * Write function or class to adjust data from the same platform across different code sets
-* Write function or class to perform quality control checks
 * Write test cases for above code
 ## Tutorial
 ```python
@@ -38,7 +37,7 @@ normalized_df = (norm
 # You can also scale by taking the 100 least variable genes instead of housekeeping
 from scipy.stats import variation
 norm = Normalize(counts,genes)
-fgs = FunctionGeneSelector(func=variation,n=100,select_least=True)
+fgs = FunctionGeneSelector(genes,func=variation,n=100,select_least=True)
 normalized_df = (norm
     .background_subtract(genes=ccgs.get('Negative'),drop_genes=True)
     .scale_by_genes(genes=ccgs.get('Positive'),drop_genes=True)
