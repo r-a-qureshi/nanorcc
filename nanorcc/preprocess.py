@@ -103,7 +103,7 @@ class Normalize():
         scale_factor = func(self.norm_data[genes],axis=1)\
             /func(func(self.norm_data[genes],axis=1))
         return(scale_factor)
-    def scale_by_genes(self,genes,func='mean',drop_genes=True):
+    def scale_by_genes(self,genes,func='mean',drop_genes=False):
         """Normalize against a set of genes usually positive controls or
         housekeeping genes."""
         sf = self._scale_factor(genes,func)

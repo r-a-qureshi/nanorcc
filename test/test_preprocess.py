@@ -59,7 +59,6 @@ class TestNormalize(unittest.TestCase):
         np.testing.assert_allclose(
             (self.counts[self.genes['Name']]
                 .multiply(scale_factor,axis='index')
-                .drop(self.ccgs.get('Positive'),axis=1)
                 .values
             ),
             self.norm.norm_data.values,

@@ -11,8 +11,14 @@ This package also provides methods for preprocessing and normalizing NanoString 
 ```python
 from nanorcc.parse import get_rcc_data
 from nanorcc.preprocess import CodeClassGeneSelector, FunctionGeneSelector, Normalize
+from nanorcc.quality_control import QualityControl
+
 # read the data files
 counts,genes = get_rcc_data('path_to_my_files/.*RCC')
+
+# perform Quality Control check and remove samples that fail Quality Control
+qc = QualityControl()
+counts = qc.drop_failed_qc(counts)
 
 # pass genes to CodeClassGeneSelector for easy gene selection during normalization.
 ccgs = CodeClassGeneSelector(genes)
@@ -24,17 +30,18 @@ norm = Normalize(counts,genes)
 # housekeeping genes
 # a pipeline for normalization
 normalized_df = (norm
-    .background_subtract(genes=ccgs.get('Negative'))
-    .scale_by_genes(genes=ccgs.get('Positive'))
+    .background_subtract(genes=ccgs.get('Negative'),drop_genes=True)
+    .scale_by_genes(genes=ccgs.get('Positive'),drop_genes=True)
     .scale_by_genes(genes=ccgs.get('Housekeeping'))
 ).norm_data
 
 # You can also scale by taking the 100 least variable genes instead of housekeeping
+from scipy.stats import variation
 norm = Normalize(counts,genes)
-fgs = FunctionGeneSelector(func='std',n=100,select_least=True)
+fgs = FunctionGeneSelector(func=variation,n=100,select_least=True)
 normalized_df = (norm
-    .background_subtract(genes=ccgs.get('Negative'))
-    .scale_by_genes(genes=ccgs.get('Positive'))
+    .background_subtract(genes=ccgs.get('Negative'),drop_genes=True)
+    .scale_by_genes(genes=ccgs.get('Positive'),drop_genes=True)
     .scale_by_genes(genes=fgs)
 ).norm_data
 
