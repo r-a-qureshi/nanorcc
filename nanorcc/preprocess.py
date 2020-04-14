@@ -46,6 +46,11 @@ class FunctionGeneSelector():
     """Choose genes for normalization based on the data. For example you can 
     use the 100 genes with least standard deviation for normalization."""
     def __init__(self,genes,func='std',n=100,select_least=True):
+        if 'CodeClass' not in genes.columns:
+            raise ValueError(
+                'genes must be a gene DataFrame returned by '\
+                    'parse.get_rcc_data'
+            )
         self.genes = genes
         self.func = _check_func(func)
         self.n = n
