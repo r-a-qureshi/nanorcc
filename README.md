@@ -8,9 +8,9 @@ This package also provides methods for preprocessing and normalizing NanoString 
 * Write test cases for above code
 ## Tutorial
 ```python
-from nanorcc.parse import get_rcc_data
-from nanorcc.preprocess import CodeClassGeneSelector, FunctionGeneSelector, Normalize
-from nanorcc.quality_control import QualityControl
+from nanorcc.nanorcc.parse import get_rcc_data
+from nanorcc.nanorcc.preprocess import CodeClassGeneSelector, FunctionGeneSelector, Normalize
+from nanorcc.nanorcc.quality_control import QualityControl
 
 # read the data files
 counts,genes = get_rcc_data('path_to_my_files/.*RCC')
